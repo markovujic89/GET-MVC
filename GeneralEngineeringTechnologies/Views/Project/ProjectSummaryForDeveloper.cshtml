@@ -1,0 +1,67 @@
+﻿@model IEnumerable<GeneralEngineeringTechnologies.Models.Project>
+@{
+    ViewBag.Title = "Project Summary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Project Summary</h2>
+<tobody>
+    @if (Model != null)
+    {
+        <table id="projects" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Project Code</th>
+                    <th>Project Manager</th>
+                    <th>Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                    <tr>
+                        <td>@project.Name</td>
+                        <td>@project.Code</td>
+                        <td>@project.ProjectManager.UserName</td>   
+                        <td>
+                        @if (project.Tasks.Count != 0)
+                        {
+                        @project.Tasks.Select(x => x.Progress).Average()
+                        }
+                        else
+                        {
+                            <p>Project does not contains any task.</p>
+                        }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Project do not exist in database</p>
+    }
+</tobody>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $("#projects").DataTable();
+            $("#projects .js-delete").on("click", function () {
+                if (confirm("Are you sure you want delete project?")) {
+                    $.ajax({
+                        url: "/api/Projects/" + $(this).attr("data-project-id"),
+                        method: "DELETE",
+                        success: function () {
+                            alert(xhr.responseText);
+                            console.log("Succes")
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+}

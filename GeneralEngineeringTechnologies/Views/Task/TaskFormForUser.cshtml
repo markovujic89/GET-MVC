@@ -1,0 +1,73 @@
+﻿@model GeneralEngineeringTechnologies.ViewModel.TaskViewModel
+@{
+    ViewBag.Title = "TaskForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>
+    <text>Task Editor</text>
+</h2>
+@using (Html.BeginForm("Save", "Task"))
+{
+    @Html.ValidationSummary(true, "Fix all errors!!")
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.Task.Name)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Task.Name, new { @readonly = "readonly" })
+    </div>
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.Task.Deadline)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Task.Deadline, new { @readonly = "readonly" })
+    </div>
+
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.UserName)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.UserName, new { @readonly = "readonly" })
+    </div>
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.ProjectName)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.ProjectName, new { @readonly = "readonly" })
+    </div>
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.Task.Progress)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(x => x.Task.Progress, new SelectList(ViewBag.Proggres))
+    </div>
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.Task.Status)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Task.Status, new { @class = "from-control" })
+        @Html.ValidationMessageFor(x => x.Task.Status)
+    </div>
+
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.Task.Description)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Task.Description, new { @class = "from-control" })
+        @Html.ValidationMessageFor(x => x.Task.Description)
+
+    </div>
+    @Html.HiddenFor(x => x.Task.Id)
+    @Html.AntiForgeryToken()
+    <div style="margin-top:20px">
+        <button type="submit" class="btn btn btn-primary">Save</button>
+    </div>
+}
+

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<GeneralEngineeringTechnologies.Models.Task>
+@{
+    ViewBag.Title = "Task Summary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Task Summary</h2>
+<tobody>
+    @if (Model != null)
+    {
+        <table id="tasks" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Project</th>
+                    <td>Assigne</td>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Proggres</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model)
+                {
+                <tr>
+                    <td>@Html.ActionLink(task.Name, "Edit", "Task", new { id = task.Id }, null)</td>
+                    <td>@task.Project.Name</td>
+                    <td>@if (task.AssignedUser != null)
+                            {
+                                @task.AssignedUser.UserName
+                            }
+                            else
+                            {
+                                <p>User is not assinged</p>
+                            }   
+                    </td>
+                    <td>@task.Deadline</td>
+                    <td>@task.Status</td>
+                    <td>@task.Progress</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Users do not exist in database</p>
+    }
+</tobody>
+
+@section scripts
+    {
+<script>
+    $(document).ready(function () {
+        $("#tasks").DataTable();
+        $("#tasks .js-delete").on("click", function () {
+            if (confirm("Are you sure you want delete project?")) {
+                $.ajax({
+                    url: "/api/Tasks/" + $(this).attr("data-project-id"),
+                    method: "DELETE",
+                    success: function () {
+                        alert(xhr.responseText);
+                        console.log("Succes")
+                    }
+                })
+            }
+        });
+    });
+</script>
+}

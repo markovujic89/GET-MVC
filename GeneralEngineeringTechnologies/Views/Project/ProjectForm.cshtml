@@ -1,0 +1,96 @@
+﻿@model GeneralEngineeringTechnologies.ViewModel.ProjectViewModel
+@{
+    ViewBag.Title = "Project Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>
+    <text>Project Specification</text>
+</h2>
+@using (Html.BeginForm("Save", "Project"))
+{
+
+    @Html.ValidationSummary(true, "Fix all errors!!")
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.Project.Name)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Project.Name, new { @class = "from-control" })
+        @Html.ValidationMessageFor(x => x.Project.Name)
+    </div>
+
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => x.Project.Code)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Project.Code, new { @class = "from-control" })
+    </div>
+
+
+
+    <div class="editor-label" style="margin-top:20px">
+        @Html.LabelFor(x => Model.ProjectManager)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(x => Model.ProjectManager, new SelectList(Model.ProjectManagers, "UserName", "UserName"))
+        @Html.ValidationMessageFor(x => Model.ProjectManager)
+    </div>
+
+    @Html.HiddenFor(x => x.Project.Id)
+    @Html.AntiForgeryToken()
+    <div class="form-group" style="margin-top:20px">
+        <div style="margin-top:20px">
+            <button type="submit" class="btn btn btn-primary">Save</button>
+        </div>
+    </div>
+    <div style="margin-top:20px">
+        @if (Model.Project.Tasks.Count != 0)
+        {
+            <table id="tasks" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Project</th>
+                        <th>Developer Name</th>
+                        <th>Proggres</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var task in Model.Tasks)
+                    {
+                        <tr>
+                            <td>@Html.ActionLink(task.Name, "Edit", "Task", new { id = task.Id }, null)</td>
+                            <td>@Model.Project.Name</td>
+                            <td>
+                                @if (task.AssignedUser != null)
+                                {
+                                    @task.AssignedUser.UserName
+                                }
+                                else
+                                {
+                                    <p>Task is not assigned</p>
+                                }
+                            </td>
+                            <td>@task.Progress</td>
+                            <td>@task.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>This project does not have defined task</p>
+        }
+
+    </div>
+        }
+
+
+        @section scripts
+    {
+            @Scripts.Render("~/bundles/jqueryval")
+        }

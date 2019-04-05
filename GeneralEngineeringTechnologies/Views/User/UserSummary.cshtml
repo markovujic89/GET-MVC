@@ -1,0 +1,103 @@
+﻿@model GeneralEngineeringTechnologies.ViewModel.GroupedUserViewModel
+@{
+    ViewBag.Title = "UserSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>User Summary</h2>
+<h4>Developers</h4>
+<table id="developers" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>User name</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@Html.ActionLink(user.Username, "UserForm", "User", new { id = user.Id }, null)</td>
+                <td>@user.RoleName</td>
+                <td>@user.Email</td>
+                <td>@Html.ActionLink("Delete", "Delete", "User", new { id = user.Id }, null)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div style="margin-top:15px; margin-bottom:15px">
+    <button>@Html.ActionLink("Create User", "Register", "Account")</button>
+</div>
+<h4>Project Managers</h4>
+<table id="projectmanagers" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>User name</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.ProjectManager)
+        {
+            <tr>
+                <td>@Html.ActionLink(user.Username, "UserForm", "User", new { id = user.Id }, null)</td>
+                <td>@user.RoleName</td>
+                <td>@user.Email</td>
+                <td>@Html.ActionLink("Delete", "Delete", "User", new { id = user.Id }, null)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+    {
+    @if(ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message")
+            }
+        </script>
+    }
+    <script>
+        $(document).ready(function () {
+            $("#developers").DataTable();
+            $("#developers .js-delete").on("click", function () {
+                if (confirm("Are you sure you want delete project?")) {
+                    $.ajax({
+                        url: "/api/Users/" + $(this).attr("data-project-id"),
+                        method: "DELETE",
+                        success: function () {
+                            alert(xhr.responseText);
+                            console.log("Succes")
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#projectmanagers").DataTable();
+            $("#projectmanagers .js-delete").on("click", function () {
+                if (confirm("Are you sure you want delete project?")) {
+                    $.ajax({
+                        url: "/api/Users/" + $(this).attr("data-project-id"),
+                        method: "DELETE",
+                        success: function () {
+                            alert(xhr.responseText);
+                            console.log("Succes")
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+}
+
+

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<GeneralEngineeringTechnologies.Models.Project>
+@{
+    ViewBag.Title = "Project Summary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Project Summary</h2>
+<tobody>
+    @if (Model != null)
+    {
+        <table id="projects" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Project Code</th>
+                    <th>Project Manager</th>
+                    <th>Progress</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(project.Name, "Edit", "Project", new { id = project.Id }, null)</td>
+                        <td>@project.Code</td>
+                        <td>@project.ProjectManager.UserName</td>   
+                        <td>
+                        @if (project.Tasks.Count != 0)
+                        {
+                        @project.Tasks.Select(x => x.Progress).Average()
+                        }
+                        else
+                        {
+                            <p>Project does not contains any task.</p>
+                        }
+                        </td>
+                        <td>@Html.ActionLink("Delete", "Delete", "Project", new { id = project.Id }, null)</td>
+                        @*<td><button data-project-id="@project.Id" class="btn-link js-delete">Delete</button></td>*@
+                    </tr>
+                }
+            </tbody>
+        </table>
+       
+        <button>
+            @Html.ActionLink("Add Project", "ProjectForm", "Project")
+        </button>
+    }
+    else
+    {
+        <p>Project do not exist in database</p>
+    }
+</tobody>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $("#projects").DataTable();
+            $("#projects .js-delete").on("click", function () {
+                if (confirm("Are you sure you want delete project?")) {
+                    $.ajax({
+                        url: "/api/Projects/" + $(this).attr("data-project-id"),
+                        method: "DELETE",
+                        success: function () {
+                            alert(xhr.responseText);
+                            console.log("Succes")
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+}
